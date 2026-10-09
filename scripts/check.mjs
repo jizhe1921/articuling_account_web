@@ -16,6 +16,7 @@ const expected = [
   "assets/site.css",
   "assets/site-config.js",
   "assets/token-utils.js",
+  "assets/desktop-link.js",
   "assets/api-client.js",
 ];
 

@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta http-equiv="Cache-Control" content="no-store">
   <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.articuling.com http://127.0.0.1:8766 http://localhost:8766; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
   <title>重置密码 · ArticuLing</title>
   <link rel="stylesheet" href="../assets/site.css">
@@ -18,24 +18,14 @@
       <div class="brand" aria-hidden="true">A</div>
       <p class="eyebrow">ARTICULING ACCOUNT</p>
       <h1 id="page-title">重置密码</h1>
-      <p class="lead">请输入新的 ArticuLing 密码。</p>
-      <p class="secondary">Choose a new password for your account.</p>
-
-      <form id="reset-form" class="form" novalidate>
-        <div class="field">
-          <label for="new-password">新密码</label>
-          <input id="new-password" name="new-password" type="password" minlength="10" maxlength="1024" autocomplete="new-password" required>
-        </div>
-        <div class="field">
-          <label for="confirm-password">再次输入新密码</label>
-          <input id="confirm-password" name="confirm-password" type="password" minlength="10" maxlength="1024" autocomplete="new-password" required>
-        </div>
-        <p class="hint">至少 10 个字符。密码不会保存在这个网页中。</p>
-        <button id="submit-button" class="primary-button" type="submit">确认重置密码</button>
-      </form>
-
-      <div id="status" class="status" role="status" hidden></div>
-      <noscript><p class="status" data-tone="error">此页面需要启用 JavaScript 才能重置密码。</p></noscript>
+      <p class="lead">请在 ArticuLing 客户端中设置新密码。</p>
+      <p class="secondary">Continue in the ArticuLing desktop app to reset your password.</p>
+      <div id="status" class="status" data-tone="working" role="status">
+        <span class="spinner" aria-hidden="true"></span>正在打开 ArticuLing……
+      </div>
+      <button id="open-app-button" class="primary-button action-button" type="button" hidden>打开 ArticuLing</button>
+      <p class="hint action-hint">如果浏览器没有自动打开客户端，请点击上面的按钮。</p>
+      <noscript><p class="status" data-tone="error">此页面需要启用 JavaScript 才能打开 ArticuLing。</p></noscript>
     </section>
   </main>
   <script type="module" src="./page.js"></script>

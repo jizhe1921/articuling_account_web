@@ -153,3 +153,13 @@ input:focus {
 @media (prefers-reduced-motion: reduce) {
   .spinner { animation: none; }
 }
+
+.action-button {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.action-hint {
+  margin-top: 12px;
+  text-align: center;
+}

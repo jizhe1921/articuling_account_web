@@ -1,26 +1,25 @@
-import { postJson } from "../assets/api-client.js";
-import { messageForError, setStatus } from "../assets/page-ui.js";
-import { resolveApiBaseUrl } from "../assets/site-config.js";
+import { openDesktopAction } from "../assets/desktop-link.js";
+import { setStatus } from "../assets/page-ui.js";
 import { clearActionTokenFromAddressBar, readActionToken } from "../assets/token-utils.js";
 
+const openButton = document.querySelector("#open-app-button");
 const statusElement = document.querySelector("#status");
-let token = readActionToken(window.location.href);
+
+const token = readActionToken(window.location.href);
 clearActionTokenFromAddressBar({ locationObject: window.location, historyObject: window.history });
 
+function openArticuLing() {
+  if (!token) return;
+  setStatus(statusElement, "working", "正在打开 ArticuLing……如果没有自动打开，请再次点击下方按钮。", { busy: true });
+  openDesktopAction("verify-email", token);
+}
+
 if (!token) {
+  openButton.hidden = true;
   setStatus(statusElement, "error", "验证链接缺少有效 token，请重新打开最新邮件。", { busy: false });
 } else {
-  try {
-    const result = await postJson(
-      "/v1/identity/email-verifications",
-      { verification_token: token },
-      { apiBaseUrl: resolveApiBaseUrl() },
-    );
-    token = "";
-    if (result?.verified !== true) throw new Error("verification result missing");
-    setStatus(statusElement, "success", "邮箱验证成功。现在可以返回 ArticuLing 登录。", { busy: false });
-  } catch (error) {
-    token = "";
-    setStatus(statusElement, "error", messageForError(error?.code, "verify"), { busy: false });
-  }
+  openButton.hidden = false;
+  openButton.addEventListener("click", openArticuLing);
+  setStatus(statusElement, "working", "正在打开 ArticuLing 完成邮箱验证……", { busy: true });
+  window.setTimeout(openArticuLing, 100);
 }
