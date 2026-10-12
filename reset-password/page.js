@@ -1,6 +1,6 @@
 import { postJson } from "../assets/api-client.js";
 import { messageForError, setStatus } from "../assets/page-ui.js";
-import { resolveApiBaseUrl } from "../assets/site-config.js";
+import { readActionTarget, resolveApiBaseUrl } from "../assets/site-config.js";
 import { clearActionTokenFromAddressBar, readActionToken } from "../assets/token-utils.js";
 
 const form = document.querySelector("#reset-form");
@@ -9,6 +9,7 @@ const confirmInput = document.querySelector("#confirm-password");
 const submitButton = document.querySelector("#submit-button");
 const statusElement = document.querySelector("#status");
 
+const actionTarget = readActionTarget(window.location.href);
 let token = readActionToken(window.location.href);
 clearActionTokenFromAddressBar({ locationObject: window.location, historyObject: window.history });
 
@@ -43,7 +44,7 @@ form.addEventListener("submit", async (event) => {
     const result = await postJson(
       "/v1/identity/password-resets",
       { reset_token: token, new_password: newPassword },
-      { apiBaseUrl: resolveApiBaseUrl() },
+      { apiBaseUrl: resolveApiBaseUrl(window.location.hostname, actionTarget) },
     );
     token = "";
     passwordInput.value = "";

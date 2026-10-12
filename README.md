@@ -2,7 +2,7 @@
 
 `articuling_account_web` 是 ArticuLing 账号生命周期的静态网页项目，由 GitHub Pages 托管。
 
-更新时间：2026-07-20
+更新时间：2026-10-11
 
 正式页面：
 
@@ -11,10 +11,11 @@ https://account.articuling.com/verify-email/
 https://account.articuling.com/reset-password/
 ```
 
-正式公网开发 API：
+账号页共用一个 GitHub Pages 域名，但后端环境严格分开：
 
 ```text
-https://api.articuling.com
+development -> https://dev-api.articuling.com
+deployment  -> https://api.articuling.com
 ```
 
 ## 架构边界
@@ -40,11 +41,14 @@ POST /v1/identity/email-verifications
 POST /v1/identity/password-resets
 ```
 
-生产域名页面默认调用：
+邮件 action link 会携带非敏感的 `action_target`：
 
 ```text
-https://api.articuling.com
+action_target=development -> https://dev-api.articuling.com
+action_target=deployment  -> https://api.articuling.com
 ```
+
+缺少 `action_target` 的历史链接保持向后兼容，默认走 deployment。页面不会拿同一个一次性 token 依次尝试两个环境。
 
 本机通过 `localhost` 或 `127.0.0.1` 打开网页时，自动使用：
 
@@ -60,7 +64,9 @@ http://127.0.0.1:8766
 - GitHub Pages；
 - `account.articuling.com` 自定义域名；
 - HTTPS；
-- `api.articuling.com` Cloudflare Tunnel；
+- `dev-api.articuling.com` Windows 开发环境 Cloudflare Tunnel；
+- `api.articuling.com` Ubuntu 部署环境 Cloudflare Tunnel；
+- 邮箱验证/密码重置 action link 显式区分 development 与 deployment；
 - Operation Center CORS；
 - 真实邮箱验证页面验收；
 - 真实密码重置页面验收。
@@ -81,13 +87,7 @@ http://127.0.0.1:4173/verify-email/?token=测试令牌
 http://127.0.0.1:4173/reset-password/?token=测试令牌
 ```
 
-本地页面需要把 `http://127.0.0.1:4173` 加入 Operation Center CORS。公网开发配置已经固化在：
-
-```text
-D:\Projects\runtime_data\dev_services\dev.env
-```
-
-不要在当前 PowerShell 临时覆盖公网配置后忘记恢复；本地页面调试结束后应恢复并重启 Operation Center。
+本地页面需要把 `http://127.0.0.1:4173` 加入 Operation Center CORS。后端开发配置 Authority 使用项目统一配置；不要为 Windows / Ubuntu 手工维护两份仓库配置。
 
 ## 自动检查
 

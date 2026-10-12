@@ -1,9 +1,10 @@
 import { postJson } from "../assets/api-client.js";
 import { messageForError, setStatus } from "../assets/page-ui.js";
-import { resolveApiBaseUrl } from "../assets/site-config.js";
+import { readActionTarget, resolveApiBaseUrl } from "../assets/site-config.js";
 import { clearActionTokenFromAddressBar, readActionToken } from "../assets/token-utils.js";
 
 const statusElement = document.querySelector("#status");
+const actionTarget = readActionTarget(window.location.href);
 let token = readActionToken(window.location.href);
 clearActionTokenFromAddressBar({ locationObject: window.location, historyObject: window.history });
 
@@ -14,7 +15,7 @@ if (!token) {
     const result = await postJson(
       "/v1/identity/email-verifications",
       { verification_token: token },
-      { apiBaseUrl: resolveApiBaseUrl() },
+      { apiBaseUrl: resolveApiBaseUrl(window.location.hostname, actionTarget) },
     );
     token = "";
     if (result?.verified !== true) throw new Error("verification result missing");
